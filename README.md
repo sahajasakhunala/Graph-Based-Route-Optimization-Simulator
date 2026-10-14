@@ -38,25 +38,25 @@ The campus transit network is modeled as a weighted undirected graph G = (V, E):
 - **Weights w(u, v)**: Standard transit times measured in minutes.
 
 ### Vertices Definition
-| Node ID | Stop Name | Functional Zone | Accent Color |
-| :---: | :--- | :--- | :---: |
-| S1 | Main Gate | Campus transit terminal and security check | #00d2ff |
-| S2 | Academic Block | Classrooms, academic departments, faculty offices | #ff4d6d |
-| S3 | Library | Central Library and digital study resource center | #ffb703 |
-| S4 | Hostels | Student residential halls and dining spaces | #06d6a0 |
-| S5 | SportX | Sports complex and physical recreation facilities | #f72585 |
+| Node ID | Stop Name | Functional Zone |
+| :---: | :--- | :--- |
+| S1 | Main Gate | Campus transit terminal and security check |
+| S2 | Academic Block | Classrooms, academic departments, faculty offices |
+| S3 | Library | Central Library and digital study resource center |
+| S4 | Hostels | Student residential halls and dining spaces |
+| S5 | SportX | Sports complex and physical recreation facilities |
 
 ### Edge Definitions and Weights
-| Edge ID | Source Node (u) | Target Node (v) | Weight w(u, v) [minutes] | Corridor Description |
-| :---: | :---: | :---: | :---: | :--- |
-| e_S1_S2 | S1 (Main Gate) | S2 (Academic Block) | 8 | West perimeter connection |
-| e_S1_S3 | S1 (Main Gate) | S3 (Library) | 2 | Express central roadway |
-| e_S1_S5 | S1 (Main Gate) | S5 (SportX) | 8 | South transit corridor |
-| e_S2_S3 | S2 (Academic Block) | S3 (Library) | 3 | Central academic link |
-| e_S2_S5 | S2 (Academic Block) | S5 (SportX) | 7 | East perimeter connection |
-| e_S3_S4 | S3 (Library) | S4 (Hostels) | 17 | North-South main avenue |
-| e_S3_S5 | S3 (Library) | S5 (SportX) | 7 | Central recreation link |
-| e_S4_S5 | S4 (Hostels) | S5 (SportX) | 5 | Residential-athletics corridor |
+| Edge ID | Source Node (u) | Target Node (v) | Weight w(u, v) [minutes] |
+| :---: | :---: | :---: | :---: |
+| e_S1_S2 | S1 (Main Gate) | S2 (Academic Block) | 8 |
+| e_S1_S3 | S1 (Main Gate) | S3 (Library) | 2 |
+| e_S1_S5 | S1 (Main Gate) | S5 (SportX) | 8 |
+| e_S2_S3 | S2 (Academic Block) | S3 (Library) | 3 |
+| e_S2_S5 | S2 (Academic Block) | S5 (SportX) | 7 |
+| e_S3_S4 | S3 (Library) | S4 (Hostels) | 17 |
+| e_S3_S5 | S3 (Library) | S5 (SportX) | 7 |
+| e_S4_S5 | S4 (Hostels) | S5 (SportX) | 5 |
 
 ---
 
@@ -157,5 +157,5 @@ The server will start at `http://localhost:5000` and automatically launch the de
 | Right Arrow | Advance to next step |
 | Left Arrow | Return to previous step |
 | R | Reset simulation to initial state |
-| Home | Jump directly to step 1 |
-| End | Jump directly to final step |
+| Home (or Fn + Left Arrow on compact laptops) | Jump directly to step 1 |
+| End (or Fn + Right Arrow on compact laptops) | Jump directly to final step |
