@@ -67,33 +67,25 @@ The campus transit network is modeled as a weighted undirected graph G = (V, E):
 | :--- | :--- | :--- | :--- |
 | Design Paradigm | Greedy | Dynamic Programming | Dynamic Programming |
 | Scope | Single-Source Shortest Path | Single-Source Shortest Path | All-Pairs Shortest Path |
-| Time Complexity | O((V + E) log V) with min-heap | O(V * E) | O(V^3) |
-| Space Complexity | O(V) | O(V) | O(V^2) |
+| Time Complexity | O((V + E) log V) with min-heap | O(V * E) | O(V³) |
+| Space Complexity | O(V) | O(V) | O(V²) |
 | Negative Edge Support | Not supported (requires w >= 0) | Supported | Supported |
 | Negative Cycle Detection | Unable to detect | Detects negative cycles | Detects negative cycles |
 | Optimal Application | Real-time single-vehicle dispatch | Routing under traffic penalties | Precomputed campus routing matrix |
 
 ### Recurrence Formulations
 
-#### Dijkstra's Relaxation Condition
-```text
-alt = dist[u] + w(u, v)
-if alt < dist[v]:
-    dist[v] = alt
-    prev[v] = u
-```
+#### Dijkstra Relaxation Condition
+$$\text{alt} = \text{dist}[u] + w(u, v)$$
+$$\text{if } \text{alt} < \text{dist}[v] \implies \text{dist}[v] = \text{alt}, \quad \text{prev}[v] = u$$
 
 #### Bellman-Ford Recurrence
-```text
-dist[v]^(k) = min(dist[v]^(k-1), dist[u]^(k-1) + w(u, v))
-for all (u, v) in E, repeated for k = 1 to |V| - 1
-```
+$$\text{dist}^{(k)}[v] = \min \left( \text{dist}^{(k-1)}[v], \; \text{dist}^{(k-1)}[u] + w(u, v) \right) \quad \forall (u, v) \in E$$
+$$\text{for iteration } k = 1, 2, \dots, |V| - 1$$
 
 #### Floyd-Warshall Recurrence
-```text
-d[i][j]^(k) = min(d[i][j]^(k-1), d[i][k]^(k-1) + d[k][j]^(k-1))
-for k = 1 to |V|
-```
+$$d^{(k)}[i][j] = \min \left( d^{(k-1)}[i][j], \; d^{(k-1)}[i][k] + d^{(k-1)}[k][j] \right)$$
+$$\text{for intermediate vertex } k = 1, 2, \dots, |V|$$
 
 ---
 
