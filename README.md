@@ -1,110 +1,161 @@
-# 🚎 Woxsen University: Campus Shuttle Routing & Live Algorithm Simulation
+# Woxsen University: Campus Shuttle Routing and Live Algorithm Simulation
 
-### **Design and Analysis of Algorithms (DAA) Capstone Project**
-*Problem Formulation: Campus Shuttle Routing & Capacity Scheduling on Weighted Undirected Graphs*
-
----
-
-## 📌 1. Project Overview & Problem Statement
-
-At **Woxsen University**, thousands of students, faculty, and administrative staff commute across lecture blocks, central facilities, sports complexes, and residential towers daily. 
-
-This project simulates, optimizes, and analyzes the **Campus Shuttle Routing & Capacity Scheduling** problem using classical graph optimization algorithms:
-1. **Dijkstra's Algorithm** (Single-Source Shortest Path — Greedy)
-2. **Bellman-Ford Algorithm** (Single-Source Shortest Path — Dynamic Programming & Edge Relaxations)
-3. **Floyd-Warshall Algorithm** (All-Pairs Shortest Path — 3D Dynamic Programming Matrix)
-4. **Live Multi-Vehicle Fleet Capacity Scheduling Simulation** (Dynamic Shortest-Path Dispatching vs. Naive Circular Loops)
-
-Every algorithm runs as a **seamless, high-definition live video / animated simulation** featuring automated frame-by-frame progression, scrubber controls, voice narration, audio feedback, interactive data structures, line-by-line pseudocode tracking, and live shuttle routing.
+### Design and Analysis of Algorithms (DAA) Project
+*Problem Formulation: Campus Shuttle Routing and Optimization on Weighted Undirected Graphs*
 
 ---
 
-## 🗺️ 2. The Woxsen Campus Shuttle Network
+## 1. Project Overview
 
-The university campus is modeled as a weighted undirected graph $G = (V, E)$, where:
-- **Vertices $V$ ($|V| = 5$)** represent official campus shuttle stops.
-- **Edges $E$ ($|E| = 8$)** represent physical roadway segments between stops.
-- **Edge Weights $w(u, v)$** represent travel time in minutes under standard campus speed limits.
+At Woxsen University, efficient mobility across academic zones, residential blocks, central facilities, and transit access points is critical for daily operations.
 
-### **Campus Stop Nodes ($V$)**
-| Node ID | Stop Name | Campus Function | Hex Accent |
+This project implements an interactive simulation and comparative analysis of graph-based route optimization algorithms applied to the Woxsen University campus shuttle network:
+1. **Dijkstra's Algorithm** (Single-Source Shortest Path - Greedy Paradigm)
+2. **Bellman-Ford Algorithm** (Single-Source Shortest Path - Dynamic Programming Paradigm)
+3. **Floyd-Warshall Algorithm** (All-Pairs Shortest Path - Dynamic Programming Matrix Formulation)
+4. **Campus Shuttle Simulation** (Interactive route traversal and state verification)
+
+The platform provides a step-by-step visualizer with synchronized playback controls, speed regulation, real-time node and distance table updates, dynamic edge evaluations, and line-by-line pseudocode execution tracking.
+
+---
+
+## 2. Academic Metadata
+
+- **Student Name**: Sakhunala Sahaja
+- **Roll Number**: 25WU0102237
+- **Course**: Design and Analysis of Algorithms
+- **Course Code**: 25TU03MJM1
+- **Faculty Supervisor**: Dr. Ali Nadim Alhaj
+- **Institution**: Woxsen University
+
+---
+
+## 3. Campus Network Graph Model
+
+The campus transit network is modeled as a weighted undirected graph G = (V, E):
+- **Vertices (V, |V| = 5)**: Designated transit stops across campus.
+- **Edges (E, |E| = 8)**: Physical road corridors connecting adjacent stops.
+- **Weights w(u, v)**: Standard transit times measured in minutes.
+
+### Vertices Definition
+| Node ID | Stop Name | Functional Zone | Accent Color |
 | :---: | :--- | :--- | :---: |
-| **S1** | **Main Gate** | Official campus bus stop, commuter hub, entry security | `#00d2ff` |
-| **S2** | **Academic Block** | Lecture halls, engineering & management labs, faculty | `#ff4d6d` |
-| **S3** | **Library** | Central learning hub, digital commons, study zones | `#ffb703` |
-| **S4** | **Hostels** | Student residential towers, dining halls, student lounge | `#06d6a0` |
-| **S5** | **SportX** | Indoor sports arena, gymnasium, athletic grounds | `#f72585` |
+| S1 | Main Gate | Campus transit terminal and security check | #00d2ff |
+| S2 | Academic Block | Classrooms, academic departments, faculty offices | #ff4d6d |
+| S3 | Library | Central Library and digital study resource center | #ffb703 |
+| S4 | Hostels | Student residential halls and dining spaces | #06d6a0 |
+| S5 | SportX | Sports complex and physical recreation facilities | #f72585 |
 
-### **Campus Road Segments & Travel Times ($E$)**
-| Edge ID | Stop $u$ | Stop $v$ | Travel Time $w(u, v)$ | Road Characteristics |
+### Edge Definitions and Weights
+| Edge ID | Source Node (u) | Target Node (v) | Weight w(u, v) [minutes] | Corridor Description |
 | :---: | :---: | :---: | :---: | :--- |
-| `e_S1_S2` | **S1 (Main Gate)** | **S2 (Academic Block)** | **8 min** | Diagonal perimeter road |
-| `e_S1_S3` | **S1 (Main Gate)** | **S3 (Library)** | **2 min** | Express central boulevard |
-| `e_S1_S5` | **S1 (Main Gate)** | **S5 (SportX)** | **8 min** | South ring road bypass |
-| `e_S2_S3` | **S2 (Academic Block)** | **S3 (Library)** | **3 min** | Direct central academic link |
-| `e_S2_S5` | **S2 (Academic Block)** | **S5 (SportX)** | **7 min** | East perimeter roadway |
-| `e_S3_S4` | **S3 (Library)** | **S4 (Hostels)** | **17 min** | North-South transit corridor |
-| `e_S3_S5` | **S3 (Library)** | **S5 (SportX)** | **7 min** | Central recreational bypass |
-| `e_S4_S5` | **S4 (Hostels)** | **S5 (SportX)** | **5 min** | Direct hostel-athletics avenue |
+| e_S1_S2 | S1 (Main Gate) | S2 (Academic Block) | 8 | West perimeter connection |
+| e_S1_S3 | S1 (Main Gate) | S3 (Library) | 2 | Express central roadway |
+| e_S1_S5 | S1 (Main Gate) | S5 (SportX) | 8 | South transit corridor |
+| e_S2_S3 | S2 (Academic Block) | S3 (Library) | 3 | Central academic link |
+| e_S2_S5 | S2 (Academic Block) | S5 (SportX) | 7 | East perimeter connection |
+| e_S3_S4 | S3 (Library) | S4 (Hostels) | 17 | North-South main avenue |
+| e_S3_S5 | S3 (Library) | S5 (SportX) | 7 | Central recreation link |
+| e_S4_S5 | S4 (Hostels) | S5 (SportX) | 5 | Residential-athletics corridor |
 
 ---
 
-## ⚡ 3. Algorithmic Comparison & Theoretical Analysis
+## 4. Theoretical Analysis of Implemented Algorithms
 
-$$\min \sum_{p \in P} \left( T_{\text{wait}}(p) + T_{\text{transit}}(p) \right) \quad \text{subject to } \operatorname{Cap}(S) \le 25$$
+### Algorithmic Comparison
+| Parameter | Dijkstra's Algorithm | Bellman-Ford Algorithm | Floyd-Warshall Algorithm |
+| :--- | :--- | :--- | :--- |
+| Design Paradigm | Greedy | Dynamic Programming | Dynamic Programming |
+| Scope | Single-Source Shortest Path | Single-Source Shortest Path | All-Pairs Shortest Path |
+| Time Complexity | O((V + E) log V) with min-heap | O(V * E) | O(V^3) |
+| Space Complexity | O(V) | O(V) | O(V^2) |
+| Negative Edge Support | Not supported (requires w >= 0) | Supported | Supported |
+| Negative Cycle Detection | Unable to detect | Detects negative cycles | Detects negative cycles |
+| Optimal Application | Real-time single-vehicle dispatch | Routing under traffic penalties | Precomputed campus routing matrix |
 
-| Algorithm | Paradigm | Time Complexity | Space Complexity | Handles Negative Edges | Campus Transit Use Case |
-| :--- | :--- | :--- | :--- | :---: | :--- |
-| **Dijkstra** | Greedy | $\mathcal{O}((V + E) \log V)$ | $\mathcal{O}(V)$ | ❌ (requires $w \ge 0$) | Instantaneous on-demand single-shuttle routing. |
-| **Bellman-Ford** | Dynamic Programming | $\mathcal{O}(V \cdot E)$ | $\mathcal{O}(V)$ | ✅ (detects negative cycles) | Validating traffic stability and congestion penalties. |
-| **Floyd-Warshall** | Dynamic Programming | $\mathcal{O}(V^3)$ | $\mathcal{O}(V^2)$ | ✅ (no negative cycles) | Precomputing the all-pairs campus transit timetable matrix. |
+### Recurrence Formulations
+
+#### Dijkstra's Relaxation Condition
+```text
+alt = dist[u] + w(u, v)
+if alt < dist[v]:
+    dist[v] = alt
+    prev[v] = u
+```
+
+#### Bellman-Ford Recurrence
+```text
+dist[v]^(k) = min(dist[v]^(k-1), dist[u]^(k-1) + w(u, v))
+for all (u, v) in E, repeated for k = 1 to |V| - 1
+```
+
+#### Floyd-Warshall Recurrence
+```text
+d[i][j]^(k) = min(d[i][j]^(k-1), d[i][k]^(k-1) + d[k][j]^(k-1))
+for k = 1 to |V|
+```
 
 ---
 
-## 🎬 4. Features of the Live Video Simulation
+## 5. System Features
 
-- **Seamless Step-by-Step Flow**:
-  - Live autoplay with variable speeds (`0.5x`, `1x`, `1.5x`, `2.5x`).
-  - Interactive video scrubber with step counter (e.g. `Step 4 of 15`).
-  - Animated traveling laser pulses along edges being evaluated.
-  - Glowing node rings for active node $u$, neighbor $v$, and settled status.
-  - Flash animations on table cells whenever an edge is relaxed.
-- **Dynamic Data Structures**:
-  - **Dijkstra**: Tentative distance table (`Stop | Travel Time | Predecessor | Status`), priority queue, and live arithmetic substitution.
-  - **Bellman-Ford**: Pass counter ($1$ to $|V|-1$), edge list examination, and early convergence checks.
-  - **Floyd-Warshall**: Full $5 \times 5$ distance matrix $D^{(k)}$ with active pivot row/column highlighting and clickable cells that instantly reconstruct paths on the campus map!
-- **AI Voice Narration & Audio FX**:
-  - Built-in speech synthesis (`SpeechSynthesisUtterance`) that reads out the step logic out loud like a lecture video.
-  - Offline procedural Web Audio synthesis with subtle clicks and chord fanfares on relaxation and path convergence.
-- **Campus Fleet Capacity Simulation**:
-  - 2 Shuttles (Alpha & Beta, capacity 25 each).
-  - Morning Rush, Midday, and Evening Shift profiles.
-  - Direct benchmark proving that DAA dynamic routing achieves a **36.4% reduction in passenger waiting time** over fixed circular routes.
+1. **Step-by-Step State Visualization**:
+   - Automated playback and pause controls for all three algorithms.
+   - Variable playback speeds: 0.25x, 0.5x, 1x, 1.5x, 2x, and 4x.
+   - Interactive manual controls: Previous Step, Next Step, and Reset.
+   - Discrete step counter indicating active step index and total steps.
+
+2. **Synchronized Execution Tracking**:
+   - Explicit highlighting of tentative weight calculation, comparison, and relaxation.
+   - Simultaneous tabular updates of distances and predecessor pointers.
+   - Floyd-Warshall intermediate pivot row and column visualization on a 5x5 distance matrix.
+
+3. **Graph Layout and Usability**:
+   - Stable canvas rendering preventing element jumping or style distortion during cursor interactions.
+   - Draggable node anchors to optimize visual clarity and eliminate edge label overlap.
+   - Constrained campus shuttle animation following validated edge paths.
 
 ---
 
-## 🚀 5. How to Run
+## 6. Project Structure
 
-### **Option 1: Direct Double-Click (Zero Setup)**
-Simply double-click [`index.html`](file:///c:/Users/LENOVO/Downloads/DAA%20PROJECT/index.html) in any modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Safari).
+```text
+DAA PROJECT/
+|-- index.html                 # Main interface and interactive visualizer
+|-- styles.css                 # Application styling and layout rules
+|-- app.js                     # Core application coordinator and graph rendering
+|-- algorithms.js              # Implementations and step generators for Dijkstra, Bellman-Ford, Floyd-Warshall
+|-- shuttle_simulation.js      # Dynamic vehicle path animation and trajectory logic
+|-- serve.py                   # Local development server
+|-- README.md                  # Project documentation
+|-- PROJECT_REPORT.md          # Comprehensive academic report
+|-- DAA_PROJECT_REPORT.html    # Formatted printable academic report
+`-- assets/                    # Node icons and media resources
+```
 
-### **Option 2: Using the Python Server**
-Open a terminal in this directory and execute:
-```bash
+---
+
+## 7. Execution Instructions
+
+### Method 1: Local File Execution
+Open `index.html` directly in any standard modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox).
+
+### Method 2: Local HTTP Server
+Run the included Python script to serve the application locally:
+```powershell
 python serve.py
 ```
-This automatically starts a local server at `http://localhost:5000` and opens your browser.
+The server will start at `http://localhost:5000` and automatically launch the default browser.
 
 ---
 
-## ⌨️ Keyboard Shortcuts
-- **`Spacebar`**: Play / Pause live simulation video.
-- **`Right Arrow (→)`**: Step forward.
-- **`Left Arrow (←)`**: Step backward.
-- **`Home`**: Jump to initial step.
-- **`End`**: Jump to final step.
-- **`R`**: Reset simulation to step 1.
+## 8. Keyboard Controls
 
----
-
-*Developed for the Design and Analysis of Algorithms (DAA) Project, Woxsen University.*
+| Key | Action |
+| :--- | :--- |
+| Spacebar | Play or Pause simulation playback |
+| Right Arrow | Advance to next step |
+| Left Arrow | Return to previous step |
+| R | Reset simulation to initial state |
+| Home | Jump directly to step 1 |
+| End | Jump directly to final step |
