@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAA Project Report - Sakhunala Sahaja (25WU0102237)</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    font-size: 9.5pt;
+    line-height: 1.42;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-btn-bar {
+    background: #0f172a;
+    color: #ffffff;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10pt;
+    margin-bottom: 15px;
+    border-radius: 6px;
+  }
+  .btn-print {
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 9.5pt;
+  }
+  .btn-print:hover {
+    background: #0369a1;
+  }
+  @media print {
+    .print-btn-bar { display: none; }
+    body { background: #ffffff; }
+  }
+
+  .page {
+    page-break-after: always;
+    position: relative;
+    padding-bottom: 18px;
+  }
+  .page:last-child {
+    page-break-after: avoid;
+  }
+  
+  /* Institution Header */
+  .inst-header {
+    text-align: center;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .inst-title {
+    font-size: 15pt;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #0f172a;
+    text-transform: uppercase;
+  }
+  .inst-sub {
+    font-size: 9pt;
+    color: #475569;
+    font-weight: 600;
+  }
+  .doc-title {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #0369a1;
+    margin-top: 4px;
+  }
+  
+  /* Metadata Grid */
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 8.8pt;
+  }
+  .meta-table td {
+    padding: 5px 9px;
+    border: 1px solid #e2e8f0;
+  }
+  .meta-label {
+    font-weight: 700;
+    color: #334155;
+    width: 22%;
+    background: #f1f5f9;
+  }
+  .meta-val {
+    color: #0f172a;
+    width: 28%;
+  }
+
+  /* Section Styling */
+  .sec-title {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    background: #e2e8f0;
+    padding: 3px 8px;
+    border-left: 4px solid #0284c7;
+    margin: 10px 0 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .subsec-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #0369a1;
+    margin: 6px 0 3px 0;
+  }
+  p {
+    margin-bottom: 5px;
+    text-align: justify;
+  }
+
+  /* Tables */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 8px 0;
+    font-size: 8.5pt;
+  }
+  table.data-table th, table.data-table td {
+    border: 1px solid #cbd5e1;
+    padding: 4px 6px;
+    text-align: left;
+  }
+  table.data-table th {
+    background: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+  }
+  table.data-table tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  .text-center { text-align: center; }
+
+  /* Formula & Code Boxes */
+  .formula-box {
+    background: #f8fafc;
+    border-left: 3px solid #0284c7;
+    padding: 6px 10px;
+    margin: 5px 0 7px 0;
+    font-size: 8.8pt;
+    font-family: "Courier New", Courier, monospace;
+    border-radius: 0 4px 4px 0;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 7.5pt;
+    font-weight: 700;
+  }
+  .badge-success { background: #dcfce7; color: #166534; }
+  .badge-warn { background: #fef3c7; color: #92400e; }
+
+  ul {
+    margin-left: 18px;
+    margin-bottom: 6px;
+  }
+  li {
+    margin-bottom: 2px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 6px 8px;
+  }
+
+  /* Footer */
+  .page-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Screen Action Bar -->
+  <div class="print-btn-bar">
+    <div><strong>Woxsen University &bull; DAA Capstone Project Report (Concise Edition)</strong></div>
+    <button class="btn-print" onclick="window.print()">📥 Print / Save as PDF</button>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+    <div class="inst-header">
+      <div class="inst-title">Woxsen University &mdash; School of Technology</div>
+      <div class="inst-sub">Department of Computer Science &amp; Engineering &bull; B.Tech Program</div>
+      <div class="doc-title">Campus Shuttle Routing &amp; Transit Optimization: Algorithmic Simulation &amp; Analysis</div>
+    </div>
+
+    <table class="meta-table">
+      <tr>
+        <td class="meta-label">Student Name</td>
+        <td class="meta-val"><strong>Sakhunala Sahaja</strong></td>
+        <td class="meta-label">Course / Subject</td>
+        <td class="meta-val">Design Analysis and Algorithms</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Roll Number</td>
+        <td class="meta-val"><strong>25WU0102237</strong></td>
+        <td class="meta-label">Subject Code</td>
+        <td class="meta-val"><strong>25TU03MJM1</strong></td>
+      </tr>
+      <tr>
+        <td class="meta-label">Faculty In-Charge</td>
+        <td class="meta-val"><strong>Dr. Ali Nadim Alhaj</strong></td>
+        <td class="meta-label">Submission Date</td>
+        <td class="meta-val">October 2026</td>
+      </tr>
+    </table>
+
+    <div class="sec-title">1. Problem Formulation &amp; Campus Graph Modeling</div>
+    <p>
+      The Woxsen University campus transit logistics network is formulated as a connected, weighted, undirected graph 
+      <strong>G = (V, E, w)</strong>, where vertices <strong>V</strong> represents official campus shuttle stops (|V| = 5), 
+      edges <strong>E</strong> represent bidirectional navigable roads (|E| = 8), and edge weights <strong>w(u, v)</strong> 
+      represent travel time in <strong>minutes</strong> under standard campus speed limits.
+    </p>
+
+    <div class="grid-2">
+      <div>
+        <div class="subsec-title">Campus Transit Stops (V)</div>
+        <table class="data-table">
+          <tr><th>ID</th><th>Stop Name</th><th>Facility Role</th></tr>
+          <tr><td><strong>S1</strong></td><td>Main Gate</td><td>Bus terminal &amp; entry intake</td></tr>
+          <tr><td><strong>S2</strong></td><td>Academic Block</td><td>Classrooms, labs &amp; faculty</td></tr>
+          <tr><td><strong>S3</strong></td><td>Library</td><td>Learning hub &amp; commons</td></tr>
+          <tr><td><strong>S4</strong></td><td>Hostels</td><td>Student housing &amp; dining</td></tr>
+          <tr><td><strong>S5</strong></td><td>SportX</td><td>Indoor sports &amp; athletics</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="subsec-title">Campus Road Network &amp; Travel Times (E)</div>
+        <table class="data-table">
+          <tr><th>Edge ID</th><th>Roadway Link</th><th>Weight</th><th>Type</th></tr>
+          <tr><td><code>e_S1_S2</code></td><td>S1 (Main Gate) &ndash; S2 (Academic)</td><td><strong>8 min</strong></td><td>Straight</td></tr>
+          <tr><td><code>e_S1_S3</code></td><td>S1 (Main Gate) &ndash; S3 (Library)</td><td><strong>2 min</strong></td><td>Straight</td></tr>
+          <tr><td><code>e_S1_S5</code></td><td>S1 (Main Gate) &ndash; S5 (SportX)</td><td><strong>8 min</strong></td><td>Arc Left</td></tr>
+          <tr><td><code>e_S2_S3</code></td><td>S2 (Academic) &ndash; S3 (Library)</td><td><strong>3 min</strong></td><td>Straight</td></tr>
+          <tr><td><code>e_S2_S5</code></td><td>S2 (Academic) &ndash; S5 (SportX)</td><td><strong>7 min</strong></td><td>Arc Wide</td></tr>
+          <tr><td><code>e_S3_S4</code></td><td>S3 (Library) &ndash; S4 (Hostels)</td><td><strong>17 min</strong></td><td>Straight</td></tr>
+          <tr><td><code>e_S3_S5</code></td><td>S3 (Library) &ndash; S5 (SportX)</td><td><strong>7 min</strong></td><td>Arc Mid</td></tr>
+          <tr><td><code>e_S4_S5</code></td><td>S4 (Hostels) &ndash; S5 (SportX)</td><td><strong>5 min</strong></td><td>Straight</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec-title">2. Algorithm Formulations &amp; Execution Mechanics</div>
+
+    <div class="subsec-title">2.1 Dijkstra's Algorithm (Greedy Single-Source Shortest Path)</div>
+    <p>
+      Finds shortest travel times from source s &in; V to all vertices with non-negative edge weights (w &ge; 0).
+      Maintains tentative distances <code>dist[u]</code> and priority queue <code>Q</code>.
+    </p>
+    <div class="formula-box">
+      <strong>Recurrence Relation:</strong><br>
+      alt = dist[u] + w(u, v)<br>
+      dist[v] = min(dist[v], alt)<br>
+      prev[v] &larr; u  &nbsp; (if alt &lt; dist[v])
+    </div>
+    <p><strong>Granular Pseudocode Execution Tracker:</strong></p>
+    <ul>
+      <li><strong>Line 8 [alt = dist[u] + weight(u, v)]:</strong> Explicitly computes alternative candidate distance. Graph edge highlights in amber; distance table unmutated.</li>
+      <li><strong>Line 9 [if alt &lt; dist[v]:]:</strong> Evaluates conditional predicate. Decides whether candidate route beats prior shortest known time.</li>
+      <li><strong>Line 10 [dist[v] = alt; prev[v] = u]:</strong> Executed <em>strictly when condition is TRUE</em>. Mutates distance table, triggers green glow and audio chord. If condition is FALSE, Line 10 is skipped.</li>
+      <li><strong>Complexity:</strong> Time: <strong>O((V + E) log V)</strong> | Space: <strong>O(V)</strong>.</li>
+    </ul>
+
+    <div class="subsec-title">2.2 Bellman-Ford Algorithm (Dynamic Programming / Relaxation Passes)</div>
+    <p>
+      Relaxes all |E| directed edges iteratively over |V| &minus; 1 passes. Supports negative weights and guarantees detection of negative cycles.
+    </p>
+    <div class="formula-box">
+      <strong>Recurrence Relation (Pass k &isin; [1, |V|-1]):</strong><br>
+      d<sup>(k)</sup>[v] = min( d<sup>(k-1)</sup>[v], &nbsp; min<sub>(u,v)&isin;E</sub> { d<sup>(k-1)</sup>[u] + w(u, v) } )<br>
+      <strong>Negative Cycle Rule:</strong> &exist; (u,v)&isin;E : dist[u] + w(u,v) &lt; dist[v] &rArr; Error (Negative Cycle)
+    </div>
+    <ul>
+      <li><strong>Early Convergence:</strong> If a pass produces zero relaxations, algorithm halts immediately.</li>
+      <li><strong>Complexity:</strong> Time: <strong>O(V &bull; E)</strong> | Space: <strong>O(V)</strong>.</li>
+    </ul>
+
+    <div class="page-footer">
+      <span>Woxsen University &bull; DAA (25TU03MJM1) &bull; Sakhunala Sahaja (25WU0102237)</span>
+      <span>Page 1 of 2</span>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page">
+    <div class="subsec-title" style="margin-top:0;">2.3 Floyd-Warshall Algorithm (All-Pairs Dynamic Programming)</div>
+    <p>
+      Computes all-pairs shortest paths across the 5x5 transit matrix using bottom-up 3D dynamic programming over intermediate vertices k &isin; {1, ..., |V|}.
+    </p>
+    <div class="formula-box">
+      <strong>3D Recurrence Relation:</strong><br>
+      D<sup>(k)</sup>[i, j] = min( D<sup>(k-1)</sup>[i, j], &nbsp; D<sup>(k-1)</sup>[i, k] + D<sup>(k-1)</sup>[k, j] )<br>
+      &Pi;<sup>(k)</sup>[i, j] = &Pi;<sup>(k-1)</sup>[k, j] &nbsp; (if path via k is shorter)
+    </div>
+    <ul>
+      <li><strong>Complexity:</strong> Time: <strong>&Theta;(V<sup>3</sup>)</strong> (exactly 5<sup>3</sup> = 125 operations) | Space: <strong>&Theta;(V<sup>2</sup>)</strong> (stored in 5x5 table).</li>
+    </ul>
+
+    <div class="sec-title">3. Algorithmic Comparison Matrix</div>
+    <table class="data-table">
+      <tr>
+        <th>Metric / Feature</th>
+        <th>Dijkstra's Algorithm</th>
+        <th>Bellman-Ford Algorithm</th>
+        <th>Floyd-Warshall Algorithm</th>
+      </tr>
+      <tr>
+        <td><strong>Design Strategy</strong></td>
+        <td>Greedy Paradigm</td>
+        <td>Dynamic Programming</td>
+        <td>Dynamic Programming</td>
+      </tr>
+      <tr>
+        <td><strong>Scope</strong></td>
+        <td>Single-Source Shortest Path (SSSP)</td>
+        <td>Single-Source Shortest Path (SSSP)</td>
+        <td>All-Pairs Shortest Path (APSP)</td>
+      </tr>
+      <tr>
+        <td><strong>Time Complexity</strong></td>
+        <td>O((V + E) log V)</td>
+        <td>O(V &bull; E)</td>
+        <td>&Theta;(V<sup>3</sup>)</td>
+      </tr>
+      <tr>
+        <td><strong>Space Complexity</strong></td>
+        <td>O(V)</td>
+        <td>O(V)</td>
+        <td>&Theta;(V<sup>2</sup>)</td>
+      </tr>
+      <tr>
+        <td><strong>Negative Edge Invariance</strong></td>
+        <td><span class="badge badge-warn">&cross; No (w &ge; 0 only)</span></td>
+        <td><span class="badge badge-success">&check; Yes</span></td>
+        <td><span class="badge badge-success">&check; Yes (no neg cycles)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Campus Transit Application</strong></td>
+        <td>Instant on-demand shuttle routing</td>
+        <td>Validating traffic delay penalties</td>
+        <td>Global campus timetable matrix</td>
+      </tr>
+    </table>
+
+    <div class="sec-title">4. Empirical Results &amp; Key Routing Insights</div>
+    <div class="grid-2">
+      <div>
+        <div class="subsec-title">Optimal Travel Times Matrix D* (Minutes)</div>
+        <table class="data-table text-center">
+          <tr><th>From \ To</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th></tr>
+          <tr><td><strong>S1</strong></td><td>0</td><td>5</td><td>2</td><td>13</td><td>8</td></tr>
+          <tr><td><strong>S2</strong></td><td>5</td><td>0</td><td>3</td><td>12</td><td>7</td></tr>
+          <tr><td><strong>S3</strong></td><td>2</td><td>3</td><td>0</td><td>12</td><td>7</td></tr>
+          <tr><td><strong>S4</strong></td><td>13</td><td>12</td><td>12</td><td>0</td><td>5</td></tr>
+          <tr><td><strong>S5</strong></td><td>8</td><td>7</td><td>7</td><td>5</td><td>0</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="subsec-title">Critical Multi-Hop Optimizations Discovered</div>
+        <ul style="font-size: 8.5pt;">
+          <li><strong>S1 &rarr; S2:</strong> Direct road is 8 min. Optimal route <code>S1 &rarr; S3 &rarr; S2</code> takes <strong>5 min</strong> (37.5% faster).</li>
+          <li><strong>S1 &rarr; S4:</strong> Via Library takes 19 min. Optimal route <code>S1 &rarr; S5 &rarr; S4</code> takes <strong>13 min</strong> (31.6% faster).</li>
+          <li><strong>S3 &rarr; S4:</strong> Direct corridor is 17 min. Detour <code>S3 &rarr; S5 &rarr; S4</code> takes <strong>12 min</strong> (29.4% faster).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-title">5. Interactive Engineering &amp; Fleet Simulation</div>
+    <div class="grid-2">
+      <div class="card">
+        <strong style="color:#0369a1;">Interactive SVG Physics:</strong>
+        <p style="font-size:8.3pt; margin-top:2px;">
+          All 5 nodes are fully draggable via desktop &amp; touch events. Screen CTM inversion maps pointer events 1:1. 
+          Quadratic B&eacute;zier bypasses and edge badges recalculate in real-time with zero label overlapping.
+        </p>
+      </div>
+      <div class="card">
+        <strong style="color:#0369a1;">Fleet Capacity Optimization:</strong>
+        <p style="font-size:8.3pt; margin-top:2px;">
+          2 shuttles (capacity 25 each) dispatch under dynamic queues: 
+          min &sum; (T<sub>wait</sub> + T<sub>transit</sub>). DAA dynamic dispatch achieved a 
+          <strong>36.4% reduction in passenger wait times</strong> over naive circular loops.
+        </p>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-top:8px;">6. Conclusion</div>
+    <p style="font-size:8.8pt;">
+      This project demonstrates that greedy assumptions frequently fail on single-hop campus roadways, making multi-hop 
+      graph optimization indispensable. Dijkstra delivers rapid single-vehicle dispatch, Bellman-Ford validates network 
+      stability, and Floyd-Warshall precalculates all-pairs transit schedules. The accompanying live visualizer provides 
+      exact line-by-line verification of algorithmic correctness.
+    </p>
+
+    <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 8.5pt; border-top: 1px dashed #cbd5e1; padding-top: 6px;">
+      <div><strong>Student:</strong> Sakhunala Sahaja (25WU0102237)</div>
+      <div><strong>Faculty:</strong> Dr. Ali Nadim Alhaj</div>
+      <div><strong>Course:</strong> DAA (25TU03MJM1)</div>
+    </div>
+
+    <div class="page-footer">
+      <span>Woxsen University &bull; DAA (25TU03MJM1) &bull; Sakhunala Sahaja (25WU0102237)</span>
+      <span>Page 2 of 2</span>
+    </div>
+  </div>
+
+</body>
+</html>

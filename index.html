@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Woxsen University - Campus Shuttle Routing & Scheduling | DAA Simulation</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-top">
+        <div class="branding-group">
+          <div class="uni-badge">Woxsen University</div>
+          <div class="title-area">
+            <h1>Campus Shuttle Routing & <span class="highlight">Live Algorithm Simulation</span></h1>
+            <p class="header-meta">
+              Design & Analysis of Algorithms • Weighted Undirected Campus Graph • Travel Time in Minutes
+            </p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" id="btn-open-campus-modal" title="View official campus graph infographic and photos">
+            <span>🗺</span> Campus Map & Stops
+          </button>
+          <button class="btn-secondary" id="btn-open-daa-modal" title="View algorithmic complexity and proof breakdown">
+            <span>📊</span> DAA Complexity Analysis
+          </button>
+        </div>
+      </div>
+
+      <!-- ALGORITHM NAVIGATION TABS -->
+      <nav class="nav-tabs" id="algorithm-nav">
+        <button class="tab-btn active" data-tab="Dijkstra">
+          <span>Dijkstra's Algorithm</span>
+          <span class="tab-badge">Greedy / O((V+E)logV)</span>
+        </button>
+        <button class="tab-btn" data-tab="Bellman-Ford">
+          <span>Bellman-Ford Algorithm</span>
+          <span class="tab-badge">DP / O(V·E)</span>
+        </button>
+        <button class="tab-btn" data-tab="Floyd-Warshall">
+          <span>Floyd-Warshall Algorithm</span>
+          <span class="tab-badge">All-Pairs / O(V³)</span>
+        </button>
+        <button class="tab-btn" data-tab="Shuttle-Simulation">
+          <span>🚌 Shuttle Fleet Scheduling</span>
+          <span class="tab-badge" style="background: rgba(6, 214, 160, 0.25); color: #06d6a0;">Live Capacity Sim</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- SECTION 1: SHORTEST PATH ALGORITHM SIMULATION (Tabs 1, 2, 3) -->
+    <main id="algo-section">
+      <!-- TOP CONTROLS & VIDEO BAR -->
+      <div class="controls-bar">
+        <div class="selectors-group">
+          <div class="input-pill">
+            <label for="select-source">Source:</label>
+            <select id="select-source" class="custom-select">
+              <option value="S1" selected>S1 - Main Gate</option>
+              <option value="S2">S2 - Academic Block</option>
+              <option value="S3">S3 - Library</option>
+              <option value="S4">S4 - Hostels</option>
+              <option value="S5">S5 - SportX</option>
+            </select>
+          </div>
+
+          <div class="input-pill">
+            <label for="select-target">Destination:</label>
+            <select id="select-target" class="custom-select">
+              <option value="S1">S1 - Main Gate</option>
+              <option value="S2">S2 - Academic Block</option>
+              <option value="S3">S3 - Library</option>
+              <option value="S4">S4 - Hostels</option>
+              <option value="S5" selected>S5 - SportX</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- VIDEO PLAYBACK BUTTONS -->
+        <div class="video-player-controls">
+          <button class="btn-ctrl" id="btn-first" title="First step (Home)">⏮ First</button>
+          <button class="btn-ctrl" id="btn-prev" title="Previous step (Left Arrow)">← Previous</button>
+          <button class="btn-ctrl btn-primary-action" id="btn-play-pause" title="Play / Pause live simulation (Space)">
+            <span id="play-pause-icon">▶</span> <span id="play-pause-text">Play Video</span>
+          </button>
+          <button class="btn-ctrl" id="btn-next" title="Next step (Right Arrow)">Next Step →</button>
+          <button class="btn-ctrl" id="btn-last" title="Last step (End)">Last ⏭</button>
+          <button class="btn-ctrl" id="btn-reset" title="Reset simulation">Reset</button>
+
+          <div class="speed-selector" id="algo-speed-selector" title="Simulation Speed">
+            <button class="speed-btn" data-speed="0.25">0.25×</button>
+            <button class="speed-btn" data-speed="0.5">0.5×</button>
+            <button class="speed-btn active" data-speed="1">1×</button>
+            <button class="speed-btn" data-speed="1.5">1.5×</button>
+            <button class="speed-btn" data-speed="2">2×</button>
+            <button class="speed-btn" data-speed="4">4×</button>
+          </div>
+
+          <button class="btn-icon-toggle" id="btn-toggle-voice" title="Voice Narration (Speech Synthesis)">
+            <span id="voice-icon">🎙</span>
+          </button>
+          <button class="btn-icon-toggle active" id="btn-toggle-sound" title="Audio Effects">
+            <span id="sound-icon">🔊</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN SIMULATION DUAL COLUMN GRID -->
+      <div class="simulation-grid">
+        <!-- LEFT: GRAPH VISUALIZER & SCRUBBER -->
+        <div class="card-panel">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">
+                <span>📍 Woxsen Campus Weighted Graph</span>
+              </div>
+              <div class="card-subtitle">Undirected graph • edge weights = travel time in minutes</div>
+            </div>
+            <div id="video-status-tag" class="status-tag current">Ready</div>
+          </div>
+
+          <!-- SVG GRAPH VIEWPORT -->
+          <div class="graph-viewport" id="graph-viewport-box">
+            <svg id="campus-graph-svg" viewBox="0 0 540 540">
+              <defs>
+                <!-- Glowing filters -->
+                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <filter id="glow-gold" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <!-- Arrowhead marker -->
+                <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <polygon points="0 1, 8 4, 0 7" fill="#00d2ff" />
+                </marker>
+              </defs>
+              <!-- Edges layer -->
+              <g id="svg-edges-group"></g>
+              <!-- Edge labels layer -->
+              <g id="svg-edge-labels-group"></g>
+              <!-- Moving shuttle layer -->
+              <g id="svg-shuttle-group"></g>
+              <!-- Nodes layer -->
+              <g id="svg-nodes-group"></g>
+            </svg>
+          </div>
+
+          <!-- VIDEO SCRUBBER SLIDER TIMELINE -->
+          <div class="timeline-slider-card">
+            <div class="timeline-row">
+              <button class="btn-ctrl btn-timeline-play" id="btn-timeline-play" title="Play / Pause live simulation (Space)">
+                <span id="timeline-play-icon">▶</span> <span id="timeline-play-text">Play</span>
+              </button>
+              <div class="scrubber-track-container">
+                <input type="range" id="sim-scrubber" class="scrubber-slider" min="0" max="14" value="0">
+              </div>
+              <div class="step-indicator-badge" id="step-counter-badge">Step 1 of 15</div>
+            </div>
+          </div>
+
+          <!-- LIVE NARRATION / VIDEO EXPLANATION BANNER -->
+          <div class="narration-banner" id="narration-box">
+            <div class="narration-icon">💬</div>
+            <div class="narration-text-content">
+              <div class="narration-title" id="narration-title">Initialization</div>
+              <div class="narration-desc" id="narration-desc">
+                Set source stop tentative distance to 0 min and all other stops to ∞.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: LIVE DATA TABLES & DATA STRUCTURES -->
+        <div class="right-column">
+          <!-- TENTATIVE DISTANCES TABLE CARD (Dijkstra / Bellman-Ford) -->
+          <div class="card-panel" id="table-card-panel">
+            <div class="card-header-row">
+              <div class="card-title" id="table-card-title">Dijkstra: tentative distances</div>
+              <div class="card-subtitle" id="table-card-subtitle">Updated in real-time</div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="algo-table" id="distances-table">
+                <thead>
+                  <tr>
+                    <th>Stop</th>
+                    <th>Distance from Source</th>
+                    <th>Previous</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="distances-table-body">
+                  <!-- Populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- FLOYD-WARSHALL MATRIX VIEW (Hidden by default, shown in FW tab) -->
+            <div id="fw-matrix-container" style="display: none;">
+              <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.4rem;">
+                Distance Matrix D(k) [Travel time in minutes between all pairs]:
+              </div>
+              <div class="fw-matrix-grid" id="fw-matrix-grid">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RELAXATION RULE & ARITHMETIC CARD -->
+          <div class="formula-box">
+            <div class="formula-header">Relaxation rule:</div>
+            <div class="formula-math" id="formula-rule-text">dist[v] = min(dist[v], dist[u] + w(u,v))</div>
+            <div class="formula-calc" id="formula-calc-text">Initializing source node distances...</div>
+          </div>
+
+          <!-- FINAL SHORTEST PATH SUMMARY CARD -->
+          <div class="path-result-card">
+            <div class="path-result-header">
+              <h4>Final Shortest Route</h4>
+              <div class="path-cost-badge" id="path-cost-badge">0 min</div>
+            </div>
+            <div class="path-breadcrumbs" id="path-breadcrumbs">
+              <span class="crumb-node">S1</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.65rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.8rem; color: var(--text-secondary);">
+              <span>Algorithm Progress:</span>
+              <strong id="path-step-badge" style="color: var(--accent-cyan); font-family: var(--font-mono);">Step 1 of 15</strong>
+            </div>
+          </div>
+
+          <!-- PSEUDOCODE CODE TRACER -->
+          <div class="card-panel" style="padding: 0.85rem;">
+            <div class="card-header-row" style="margin-bottom: 0.5rem;">
+              <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">
+                Pseudocode Execution Line Tracker
+              </div>
+            </div>
+            <div class="code-tracker" id="code-tracker-container">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SECTION 2: LIVE CAMPUS SHUTTLE FLEET SCHEDULING (Tab 4) -->
+    <main id="shuttle-sim-section" style="display: none;">
+      <!-- SIMULATION CONTROLS -->
+      <div class="controls-bar">
+        <div class="selectors-group">
+          <div class="input-pill">
+            <label for="shift-preset-select">Campus Shift Schedule:</label>
+            <select id="shift-preset-select" class="custom-select">
+              <option value="MORNING_RUSH" selected>Morning Rush (08:15 AM - High Hostel to Academic flow)</option>
+              <option value="MIDDAY">Midday Classes & Lunch (01:00 PM - Inter-facility travel)</option>
+              <option value="EVENING_SPORTS">Evening Recreation (05:30 PM - Sports & Hostel return)</option>
+            </select>
+          </div>
+
+          <div class="input-pill">
+            <label for="shuttle-strategy-select">Dispatch Strategy:</label>
+            <select id="shuttle-strategy-select" class="custom-select">
+              <option value="DAA_OPTIMIZED" selected>DAA Dynamic Shortest-Path Dispatching</option>
+              <option value="NAIVE_CIRCULAR">Naive Fixed Circular Loop (S1→S2→S3→S4→S5)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="video-player-controls">
+          <button class="btn-ctrl btn-primary-action" id="btn-sim-play-pause">
+            <span id="sim-play-icon">▶</span> <span id="sim-play-text">Start Fleet Sim</span>
+          </button>
+          <div class="speed-selector">
+            <button class="speed-btn sim-speed-btn active" data-sim-speed="1">1x</button>
+            <button class="speed-btn sim-speed-btn" data-sim-speed="2">2x</button>
+            <button class="speed-btn sim-speed-btn" data-sim-speed="5">5x</button>
+          </div>
+          <button class="btn-ctrl" id="btn-sim-reset">Reset Fleet</button>
+        </div>
+      </div>
+
+      <!-- FLEET DASHBOARD -->
+      <div class="sim-dashboard">
+        <!-- METRICS TILES -->
+        <div class="sim-metrics-grid">
+          <div class="metric-stat-card">
+            <div class="metric-title">Simulated Shift Clock</div>
+            <div class="metric-value cyan" id="metric-clock">08:15 AM</div>
+            <div class="metric-sub">Real-time dynamic flow</div>
+          </div>
+          <div class="metric-stat-card">
+            <div class="metric-title">Total Passengers Served</div>
+            <div class="metric-value green" id="metric-passengers-served">0</div>
+            <div class="metric-sub">Transported to destinations</div>
+          </div>
+          <div class="metric-stat-card">
+            <div class="metric-title">Avg Passenger Wait Time</div>
+            <div class="metric-value gold" id="metric-avg-wait">0.0 min</div>
+            <div class="metric-sub">Queue dwell time at stops</div>
+          </div>
+          <div class="metric-stat-card">
+            <div class="metric-title">Fleet Capacity Utilization</div>
+            <div class="metric-value pink" id="metric-utilization">0%</div>
+            <div class="metric-sub">50 total seats active</div>
+          </div>
+          <div class="metric-stat-card">
+            <div class="metric-title">DAA Optimization Efficiency Gain</div>
+            <div class="metric-value green" id="metric-efficiency-gain">+36.4%</div>
+            <div class="metric-sub">vs Naive Circular loop</div>
+          </div>
+        </div>
+
+        <!-- DUAL FLEET AND STOP QUEUES VIEW -->
+        <div class="simulation-grid">
+          <!-- LEFT: LIVE INTERACTIVE MAP FOR FLEET -->
+          <div class="card-panel">
+            <div class="card-header-row">
+              <div class="card-title">Live Campus Transit Visualizer</div>
+              <div class="card-subtitle">Real-time shuttle movement & stop backlogs</div>
+            </div>
+            <div class="graph-viewport" id="sim-graph-viewport">
+              <svg id="sim-campus-graph-svg" viewBox="0 0 540 540">
+                <g id="sim-svg-edges-group"></g>
+                <g id="sim-svg-edge-labels-group"></g>
+                <g id="sim-svg-shuttles-group"></g>
+                <g id="sim-svg-nodes-group"></g>
+              </svg>
+            </div>
+
+            <!-- STOP QUEUE ACTIONS -->
+            <div style="margin-top: 1rem;">
+              <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                Stop Waiting Queues (Click '+' to inject commuters):
+              </div>
+              <div class="stop-queues-grid" id="sim-stop-queues-grid">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: SHUTTLE VEHICLE CARDS -->
+          <div class="right-column">
+            <div class="card-panel">
+              <div class="card-header-row">
+                <div class="card-title">Active Vehicle Telemetry</div>
+                <div class="card-subtitle">Max 25 Passengers per vehicle</div>
+              </div>
+
+              <div class="shuttle-cards-list" id="sim-shuttle-cards">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- PROJECT OBJECTIVE EXPLANATION CARD -->
+            <div class="card-panel">
+              <div class="card-title" style="margin-bottom: 0.5rem;">
+                📌 Problem Statement Formulation
+              </div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                <strong>Campus Shuttle Routing & Capacity Scheduling:</strong> Formulated as a constrained shortest-path and dynamic pickup problem over weighted undirected graph G = (V, E). The objective minimizes total passenger waiting time:
+              </p>
+              <div class="formula-box" style="margin: 0.75rem 0;">
+                <div class="formula-math" style="font-size: 0.85rem;">
+                  min ∑ (T_wait(p) + T_transit(p)) subject to Cap(S) ≤ 25
+                </div>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">
+                By applying Dijkstra / Floyd-Warshall shortest paths to guide routing towards high-demand nodes instead of static round-robin circles, students and staff reach classrooms and hostels in minimum travel time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- MODAL 1: CAMPUS GRAPH INFOGRAPHIC & STOP PHOTOS -->
+    <div class="modal-overlay" id="modal-campus-info">
+      <div class="modal-window">
+        <button class="modal-close-btn" id="modal-close-campus">&times;</button>
+        <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.25rem;">
+          Woxsen University Campus Shuttle Routing Graph
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Official node locations, campus photos, and travel times in minutes.
+        </p>
+
+        <div style="text-align: center; margin-bottom: 1.5rem; background: #000; border-radius: 12px; padding: 0.75rem; border: 1px solid var(--border-subtle);">
+          <img src="assets/media_1791396336216.png" alt="Woxsen Campus Graph" style="max-width: 100%; max-height: 480px; border-radius: 8px;">
+        </div>
+
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-top: 1rem;">Campus Node Directory</h3>
+        <div class="campus-cards-grid">
+          <div class="campus-card-item">
+            <img src="assets/stop_S1.png" alt="S1 Main Gate" class="campus-card-thumb">
+            <div class="campus-card-body">
+              <span class="campus-card-tag" style="background: rgba(0, 210, 255, 0.2); color: #00d2ff;">STOP S1</span>
+              <h4>Main Gate (Official Bus Stop)</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                Entry point for day scholars, visiting faculty, and intercity transit buses.
+              </p>
+            </div>
+          </div>
+
+          <div class="campus-card-item">
+            <img src="assets/stop_S2.png" alt="S2 Academic Block" class="campus-card-thumb">
+            <div class="campus-card-body">
+              <span class="campus-card-tag" style="background: rgba(255, 77, 109, 0.2); color: #ff4d6d;">STOP S2</span>
+              <h4>Academic Block</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                Central lecture halls, engineering/management labs, and faculty offices.
+              </p>
+            </div>
+          </div>
+
+          <div class="campus-card-item">
+            <img src="assets/stop_S3.png" alt="S3 Library" class="campus-card-thumb">
+            <div class="campus-card-body">
+              <span class="campus-card-tag" style="background: rgba(255, 183, 3, 0.2); color: #ffb703;">STOP S3</span>
+              <h4>Library</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                State-of-the-art central library, study commons, and central research hub.
+              </p>
+            </div>
+          </div>
+
+          <div class="campus-card-item">
+            <img src="assets/stop_S4.png" alt="S4 Hostels" class="campus-card-thumb">
+            <div class="campus-card-body">
+              <span class="campus-card-tag" style="background: rgba(6, 214, 160, 0.2); color: #06d6a0;">STOP S4</span>
+              <h4>Hostels</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                Multi-tower student residential accommodation, dining halls, and student lounge.
+              </p>
+            </div>
+          </div>
+
+          <div class="campus-card-item">
+            <img src="assets/stop_S5.png" alt="S5 SportX" class="campus-card-thumb">
+            <div class="campus-card-body">
+              <span class="campus-card-tag" style="background: rgba(247, 37, 133, 0.2); color: #f72585;">STOP S5</span>
+              <h4>SportX</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+                International standard indoor stadium, gymnasium, athletics grounds, and courts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: DAA COMPLEXITY ANALYSIS -->
+    <div class="modal-overlay" id="modal-daa-info">
+      <div class="modal-window">
+        <button class="modal-close-btn" id="modal-close-daa">&times;</button>
+        <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.25rem;">
+          DAA Algorithmic Complexity & Comparative Analysis
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Theoretical and practical performance breakdown for campus shuttle routing.
+        </p>
+
+        <div class="table-responsive">
+          <table class="algo-table">
+            <thead>
+              <tr>
+                <th>Algorithm</th>
+                <th>Paradigm</th>
+                <th>Time Complexity</th>
+                <th>Space Complexity</th>
+                <th>Handles Negative Edges?</th>
+                <th>Best Campus Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dijkstra</strong></td>
+                <td>Greedy</td>
+                <td>O((V + E) log V) with min-heap</td>
+                <td>O(V)</td>
+                <td>No (requires weights ≥ 0)</td>
+                <td>Fast point-to-point shuttle dispatch on demand.</td>
+              </tr>
+              <tr>
+                <td><strong>Bellman-Ford</strong></td>
+                <td>Dynamic Programming</td>
+                <td>O(V · E)</td>
+                <td>O(V)</td>
+                <td>Yes (detects negative cycles)</td>
+                <td>Verification of network stability, traffic penalty calculations.</td>
+              </tr>
+              <tr>
+                <td><strong>Floyd-Warshall</strong></td>
+                <td>Dynamic Programming</td>
+                <td>O(V³)</td>
+                <td>O(V²)</td>
+                <td>Yes (no negative cycles)</td>
+                <td>Precomputing full transit timetable matrix across all stops.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 1.5rem; background: var(--bg-card); border-radius: 10px; padding: 1.25rem; border: 1px solid var(--border-subtle);">
+          <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent-cyan);">
+            Why Dijkstra & Floyd-Warshall Win for Campus Shuttle Logistics:
+          </h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+            1. All physical travel times between campus stops are strictly positive (w(u,v) > 0), satisfying Dijkstra's greedy invariant that once a node is visited, its distance is guaranteed optimal.<br>
+            2. For a small dense campus graph (|V| = 5, |E| = 8), Floyd-Warshall computes the entire 5×5 distance matrix in only 5³ = 125 operations, enabling instantaneous lookup for dispatch decisions.<br>
+            3. Dynamic shortest path routing achieves over 30% reduction in passenger wait times compared to traditional fixed circular routes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="algorithms.js"></script>
+  <script src="shuttle_simulation.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
